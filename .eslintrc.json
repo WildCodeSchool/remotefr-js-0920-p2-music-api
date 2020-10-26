@@ -1,25 +1,67 @@
 {
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    }
+  },
   "env": {
     "browser": true,
-    "es2021": true
+    "es6": true,
+    "jest": true
   },
   "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:react/recommended",
-    "react-app/jest",
     "airbnb",
     "prettier",
+    "prettier/@typescript-eslint",
     "prettier/react"
   ],
-  "parser": "babel-eslint",
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
-    "sourceType": "module"
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
-  "plugins": ["react"],
+  "plugins": [
+    "react",
+    "@typescript-eslint"
+  ],
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".ts",
+          "tsx"
+        ]
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   }
 }
