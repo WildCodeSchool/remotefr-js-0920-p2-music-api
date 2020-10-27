@@ -56,11 +56,11 @@ const App = (): JSX.Element => {
 
   // Verification timeStamp
   useEffect(() => {
-    Object.entries(services).forEach(([name, service]): void => {
+    for (const [name, service] of Object.entries(services)) {
       if (service.expirationStamp !== -1 && Date.now() > service.expirationStamp) {
         removeToken(name as ServiceName);
       }
-    });
+    }
   }, []);
 
   return (
