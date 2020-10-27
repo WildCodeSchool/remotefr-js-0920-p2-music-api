@@ -1,16 +1,34 @@
 import React from 'react';
 
-export interface AuthTokens {
-  spotifyToken: string | null;
-  youtubeToken: string | null;
+export type ServiceName = 'spotify' | 'youtube';
 
-  setToken: (key: Exclude<keyof AuthTokens, 'setToken'>, value: string | null) => void;
+export interface AuthToken {
+  token: string | null;
+  expirationStamp: number;
+}
+
+export interface AuthTokens {
+  services: Record<ServiceName, AuthToken>;
+
+  setToken: (name: ServiceName, token: string, expiresIn: number) => void;
+  removeToken: (name: ServiceName) => void;
 }
 
 export const TokenContext = React.createContext<AuthTokens>({
-  spotifyToken: null,
-  youtubeToken: null,
+  services: {
+    spotify: {
+      token: null,
+      expirationStamp: -1,
+    },
+    youtube: {
+      token: null,
+      expirationStamp: -1,
+    },
+  },
   setToken() {
-    // default
+    throw new Error('Not implemented');
+  },
+  removeToken() {
+    throw new Error('Not implemented');
   },
 });
