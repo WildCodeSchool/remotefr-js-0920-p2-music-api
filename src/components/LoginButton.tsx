@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useContext } from 'react';
 import OAuth2Login from 'react-simple-oauth2-login';
 import { ServiceName, TokenContext } from '../TokenContext';
 
@@ -21,38 +21,33 @@ const configs: Record<ServiceName, LoginButtonConfig> = {
   },
 };
 
-class LoginButton extends React.Component<{ service: ServiceName }> {
-  static contextType = TokenContext;
+const LoginButton = ({ service }: { service: ServiceName }): JSX.Element => {
+  const { setToken } = useContext(TokenContext);
 
-  context!: React.ContextType<typeof TokenContext>;
+  const handleSuccess = useCallback(
+    (response): void => {
+      setToken(service, response.access_token, response.expires_in);
+    },
+    [setToken, service]
+  );
 
-  onSuccess = (response): void => {
-    const { service } = this.props;
-    const { setToken } = this.context;
+  const handleFailure = useCallback((): void => undefined, []);
 
-    setToken(service, response.access_token, response.expires_in);
-  };
-
-  onFailure = (): void => undefined;
-
-  render(): JSX.Element {
-    const { service } = this.props;
-    const { authorizationUrl, cliendId, scope } = configs[service];
-    return (
-      <OAuth2Login
-        className={`btn btn-outline-${service}`}
-        authorizationUrl={authorizationUrl}
-        responseType="token"
-        clientId={cliendId}
-        scope={scope}
-        redirectUri={process.env.REACT_APP_REDIRECT_URI}
-        onSuccess={this.onSuccess}
-        onFailure={this.onFailure}
-      >
-        <i className={`fab fa-${service} fa-lg`} /> Login with {service}
-      </OAuth2Login>
-    );
-  }
-}
+  const { authorizationUrl, cliendId, scope } = configs[service];
+  return (
+    <OAuth2Login
+      className={`btn btn-outline-${service}`}
+      authorizationUrl={authorizationUrl}
+      responseType="token"
+      clientId={cliendId}
+      scope={scope}
+      redirectUri={process.env.REACT_APP_REDIRECT_URI}
+      onSuccess={handleSuccess}
+      onFailure={handleFailure}
+    >
+      <i className={`fab fa-${service} fa-lg`} /> Login with {service}
+    </OAuth2Login>
+  );
+};
 
 export default LoginButton;
