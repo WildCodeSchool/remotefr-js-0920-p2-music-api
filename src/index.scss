@@ -1,0 +1,10 @@
+$theme-colors: (
+  'youtube': #ff0000,
+  'spotify': #1db954,
+);
+
+@import 'node_modules/bootstrap/scss/bootstrap';
+
+body {
+  margin: 0;
+}

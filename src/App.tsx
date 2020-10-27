@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
 import { AuthTokens, TokenContext } from './TokenContext';
+import LoginButton from './components/LoginButton';
 
 class App extends React.Component<unknown, { tokens: AuthTokens }> {
-  constructor(props: unknown) {
+  constructor(props) {
     super(props);
 
     // Load from localstorage or default null values
@@ -31,7 +32,10 @@ class App extends React.Component<unknown, { tokens: AuthTokens }> {
 
     return (
       <TokenContext.Provider value={tokens}>
-        <div className="App">App</div>
+        <div className="App">
+          <LoginButton service="spotify" />
+          <LoginButton service="youtube" />
+        </div>
       </TokenContext.Provider>
     );
   }

@@ -10,9 +10,12 @@
     "@types/node": "^12.19.1",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "bootstrap": "^4.5.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "3.4.4",
+    "react-simple-oauth2-login": "^0.2.0",
+    "reactstrap": "^8.6.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -48,6 +51,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.2",
+    "node-sass": "^4.14.1",
     "prettier": "^2.1.2"
   },
   "husky": {
