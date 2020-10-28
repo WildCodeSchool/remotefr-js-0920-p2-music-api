@@ -1,10 +1,15 @@
-$theme-colors: (
+// For internal use
+$service-colors: (
   'youtube': #ff0000,
   'spotify': #1db954,
 );
 
+// To tell boostrap to make service colored classes
+$theme-colors: $service-colors;
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'panel';
+@import 'song-card';
 
 body {
   margin: 0;

@@ -1,0 +1,71 @@
+.song-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    'image title'
+    'image author';
+
+  color: $black;
+
+  transition: color 0.5s ease, background-color 0.5s ease;
+
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 0.25rem;
+
+  margin: map-get($spacers, 3);
+
+  @include media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr auto auto;
+    grid-template-areas:
+      'image'
+      'title'
+      'author';
+
+    padding-bottom: map-get($spacers, 3);
+  }
+
+  img {
+    grid-area: image;
+
+    width: 200px;
+    height: 150px;
+
+    @include media-breakpoint-down(md) {
+      width: 100%;
+    }
+
+    object-fit: cover;
+  }
+
+  h3 {
+    grid-area: title;
+    margin-left: map-get($spacers, 2);
+    align-self: flex-end;
+  }
+
+  span {
+    grid-area: author;
+    margin-left: map-get($spacers, 2);
+  }
+}
+
+.song-card:hover {
+  color: $white;
+}
+
+@each $name, $color in $service-colors {
+  .song-card-#{$name} {
+    border-color: $color;
+  }
+
+  .song-card-#{$name} {
+    border-color: $color;
+  }
+
+  .song-card-#{$name}:hover {
+    background-color: $color;
+  }
+}
