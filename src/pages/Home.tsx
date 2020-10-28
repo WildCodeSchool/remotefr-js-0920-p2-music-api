@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { Jumbotron } from 'reactstrap';
+import { Switch, Route, NavLink } from 'react-router-dom';
 import LoginButton from '../components/LoginButton';
 import { serviceNames, TokenContext } from '../TokenContext';
 
@@ -17,11 +18,42 @@ const UnauthenticatedHome = (): JSX.Element => (
   </main>
 );
 
+const AuthenticatedHome = (): JSX.Element => (
+  <>
+    <aside className="d-flex justify-content-end">
+      {serviceNames.map((serviceName) => (
+        <div className="m-2" key={serviceName}>
+          <LoginButton service={serviceName} />
+        </div>
+      ))}
+    </aside>
+    <div className="container">
+      <nav>
+        <ul className="nav nav-tabs d-flex justify-content-center">
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/">
+              Recherche
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+
+      <main>
+        <Switch>
+          <Route exact path="/">
+            Recherche
+          </Route>
+        </Switch>
+      </main>
+    </div>
+  </>
+);
+
 const Home = (): JSX.Element => {
   const { services } = useContext(TokenContext);
 
   const isLoggedIn = useMemo(() => Object.values(services).some((service) => service.token != null), [services]);
 
-  return <>{isLoggedIn ? 'Logged in' : <UnauthenticatedHome />}</>;
+  return isLoggedIn ? <AuthenticatedHome /> : <UnauthenticatedHome />;
 };
 export default Home;
