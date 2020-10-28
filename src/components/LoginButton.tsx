@@ -2,26 +2,14 @@ import React, { useCallback, useContext } from 'react';
 import OAuth2Login from 'react-simple-oauth2-login';
 import { ServiceName, TokenContext } from '../TokenContext';
 
-interface LoginButtonConfig {
+interface TokenConfig {
   authorizationUrl: string;
   cliendId: string;
   scope: string;
+  redirectUri: string;
 }
 
-const configs: Record<ServiceName, LoginButtonConfig> = {
-  spotify: {
-    authorizationUrl: 'https://accounts.spotify.com/authorize',
-    cliendId: process.env.REACT_APP_SPOTIFY_CLIENT_ID as string,
-    scope: 'user-read-private',
-  },
-  youtube: {
-    authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-    cliendId: process.env.REACT_APP_YOUTUBE_CLIENT_ID as string,
-    scope: 'https://www.googleapis.com/auth/youtube.force-ssl',
-  },
-};
-
-const LoginButton = ({ service }: { service: ServiceName }): JSX.Element => {
+const LoginButton = ({ service, config }: { service: ServiceName; config: TokenConfig }): JSX.Element => {
   const { setToken } = useContext(TokenContext);
 
   const handleSuccess = useCallback(
@@ -33,7 +21,7 @@ const LoginButton = ({ service }: { service: ServiceName }): JSX.Element => {
 
   const handleFailure = useCallback((): void => undefined, []);
 
-  const { authorizationUrl, cliendId, scope } = configs[service];
+  const { authorizationUrl, cliendId, scope, redirectUri } = config;
   return (
     <OAuth2Login
       className={`btn btn-outline-${service}`}
@@ -41,7 +29,7 @@ const LoginButton = ({ service }: { service: ServiceName }): JSX.Element => {
       responseType="token"
       clientId={cliendId}
       scope={scope}
-      redirectUri={process.env.REACT_APP_REDIRECT_URI}
+      redirectUri={redirectUri}
       onSuccess={handleSuccess}
       onFailure={handleFailure}
     >

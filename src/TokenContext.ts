@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 
 export type ServiceName = 'spotify' | 'youtube';
 
-export const serviceNames: ServiceName[] = ['spotify', 'youtube'];
-
 export interface AuthToken {
   token: string | null;
   expirationStamp: number;
