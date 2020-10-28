@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import { AuthTokens, getServicesLocalStorage, ServiceName, TokenContext, useServices } from './TokenContext';
-import LoginButton from './components/LoginButton';
+import AuthButton from './components/AuthButton';
 
 const App = (): JSX.Element => {
   const [services, setToken, removeToken] = useServices(getServicesLocalStorage());
@@ -19,8 +19,7 @@ const App = (): JSX.Element => {
   return (
     <TokenContext.Provider value={tokenContextValue}>
       <div className="App">
-        <LoginButton service="spotify" />
-        <LoginButton service="youtube" />
+        <AuthButton />
       </div>
     </TokenContext.Provider>
   );
