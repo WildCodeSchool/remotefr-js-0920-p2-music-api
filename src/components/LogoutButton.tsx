@@ -9,7 +9,7 @@ const LogoutButton = ({ service }: { service: ServiceName }): JSX.Element => {
   };
 
   return (
-    <button type="button" className="btn btn-light" onClick={handleClickLogout}>
+    <button type="button" className="btn btn-outline-dark btn-auth" onClick={handleClickLogout}>
       <i className={`fab fa-${service} fa-lg`} /> Logout {service}
     </button>
   );

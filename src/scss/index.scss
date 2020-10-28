@@ -9,3 +9,8 @@ $theme-colors: (
 body {
   margin: 0;
 }
+
+.btn-auth {
+  min-width: 200px;
+  margin: map-get($spacers, 2);
+}
