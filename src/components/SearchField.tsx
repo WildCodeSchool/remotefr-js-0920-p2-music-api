@@ -2,13 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { TokenContext } from '../TokenContext';
 
-function makeObjectOfDataRequest(data): Record<string, any> {
-  const dataAlbums: Array<Record<string, any>> = [];
-  const dataArtists: Array<Record<string, any>> = [];
+function makeObjectOfDataRequest(data): Array<Record<string, any>> {
   const dataTracks: Array<Record<string, any>> = [];
-  const dataPlaylist: Array<Record<string, any>> = [];
-  const dataToShow: Record<string, any> = {};
-  const type = Object.keys(data); // Albums, Artists, playlist ....
   interface ItemPush {
     title: string;
     url: string;
@@ -16,38 +11,17 @@ function makeObjectOfDataRequest(data): Record<string, any> {
     type: string;
   }
 
-  type.forEach((t) => {
-    data[t].items.forEach((item) => {
-      const i: ItemPush = {
-        title: item.name,
-        url: item.external_urls.spotify,
-        image: item.images !== undefined && item.images.length > 0 ? item.images[0].url : 'noImageFound',
-        type: item.type,
-      };
-      switch (t) {
-        case 'albums':
-          dataAlbums.push(i);
-          break;
-        case 'artists':
-          dataArtists.push(i);
-          break;
-        case 'tracks':
-          dataTracks.push(i);
-          break;
-        case 'playlists':
-          dataPlaylist.push(i);
-          break;
-        default:
-          break;
-      }
-    });
+  data.tracks.items.forEach((item: Record<string, any>) => {
+    const i: ItemPush = {
+      title: item.name,
+      url: item.external_urls.spotify,
+      image:
+        item.album.images !== undefined && item.album.images.length > 0 ? item.album.images[0].url : 'noImageFound',
+      type: item.type,
+    };
+    dataTracks.push(i);
   });
-
-  dataToShow.albums = dataAlbums;
-  dataToShow.artists = dataArtists;
-  dataToShow.tracks = dataTracks;
-  dataToShow.playlists = dataPlaylist;
-  return dataToShow;
+  return dataTracks;
 }
 
 async function searchOnSpotify(token, word = 'julien'): Promise<any> {
@@ -58,7 +32,7 @@ async function searchOnSpotify(token, word = 'julien'): Promise<any> {
   const config = {
     params: {
       q: word,
-      type: 'album,artist,playlist,track',
+      type: 'track',
     },
     headers: {
       Authorization: `Bearer ${spotifyToken}`,
@@ -71,21 +45,24 @@ async function searchOnSpotify(token, word = 'julien'): Promise<any> {
     .then((data) => {
       return makeObjectOfDataRequest(data);
     })
-    .catch((e) => console.log(e.response));
+    .catch((e) => console.error(e.response));
 }
 
 export default function SearchField(): JSX.Element {
-  // let dataShow = {};
+  interface DataShow {
+    title: string;
+    url: string;
+    image: string;
+    type: string;
+  }
   const { services } = useContext(TokenContext);
-
   const [fieldValue, setFieldValue] = useState('');
   const [submitValue, setSubmitValue] = useState('');
-  const [dataShow, setDataShow] = useState<any>({});
+  const [dataShow, setDataShow] = useState<Array<Record<string, DataShow>>>([]);
 
   useEffect(() => {
-    (async function () {
+    (async (): Promise<any> => {
       const d = await searchOnSpotify(services.spotify.token, submitValue);
-      console.log('in useEffect: d :>> ', d);
       setDataShow(d);
       return d;
     })();
@@ -96,15 +73,11 @@ export default function SearchField(): JSX.Element {
     setSubmitValue(fieldValue);
   };
 
-  // console.log('dataShow :>> ', dataShow);
-
-  // eslint-disable-next-line
-  // debugger;
   return (
     <div>
-      Result : {dataShow.artists ? dataShow.artists[0].title : 'plein'} <br />
-      <form onSubmit={(e) => handleOnSubmit(e)}>
-        <input type="text" value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} />
+      Result : {dataShow.length > 0 ? dataShow[0].title : 'plein'} <br />
+      <form onSubmit={(e): void => handleOnSubmit(e)}>
+        <input type="text" value={fieldValue} onChange={(e): void => setFieldValue(e.target.value)} />
         <button type="submit">Submit</button>
       </form>
     </div>
