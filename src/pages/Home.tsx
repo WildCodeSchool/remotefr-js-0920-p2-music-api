@@ -3,6 +3,7 @@ import { Jumbotron } from 'reactstrap';
 import { Switch, Route, NavLink } from 'react-router-dom';
 import LoginButton from '../components/LoginButton';
 import { serviceNames, TokenContext } from '../TokenContext';
+import AuthBar from '../components/AuthBar';
 
 const UnauthenticatedHome = (): JSX.Element => (
   <main className="container d-flex justify-content-center align-items-center vw-100 vh-100">
@@ -20,13 +21,7 @@ const UnauthenticatedHome = (): JSX.Element => (
 
 const AuthenticatedHome = (): JSX.Element => (
   <>
-    <aside className="d-flex justify-content-end">
-      {serviceNames.map((serviceName) => (
-        <div className="m-2" key={serviceName}>
-          <LoginButton service={serviceName} />
-        </div>
-      ))}
-    </aside>
+    <AuthBar />
     <div className="container">
       <nav>
         <ul className="nav nav-tabs d-flex justify-content-center">
