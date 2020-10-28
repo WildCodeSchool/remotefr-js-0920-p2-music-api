@@ -25,20 +25,19 @@ const configs: Record<ServiceName, TokenConfig> = {
   },
 };
 
-const AuthButton = (): JSX.Element => {
+const AuthButtons = (): JSX.Element => {
   const { services } = useContext(TokenContext);
   return (
     <>
-      <h2>Component AuthButton</h2>
-      {Object.entries(configs).map(([name, conf]) => {
-        return services[name].token ? (
+      {Object.entries(configs).map(([name, conf]) =>
+        services[name].token ? (
           <LogoutButton key={name} service={name as ServiceName} />
         ) : (
           <LoginButton key={name} service={name as ServiceName} config={conf} />
-        );
-      })}
+        )
+      )}
     </>
   );
 };
 
-export default AuthButton;
+export default AuthButtons;
