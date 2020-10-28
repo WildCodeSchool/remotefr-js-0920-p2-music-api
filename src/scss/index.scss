@@ -4,6 +4,7 @@ $theme-colors: (
 );
 
 @import 'node_modules/bootstrap/scss/bootstrap';
+@import 'panel';
 
 body {
   margin: 0;

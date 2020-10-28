@@ -1,0 +1,19 @@
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 90vw;
+
+  background-color: white;
+
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+.panel .close-button {
+}
