@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import { AuthTokens, getServicesLocalStorage, ServiceName, TokenContext, useServices } from './TokenContext';
-// import LoginButton from './components/LoginButton';
 import AuthButton from './components/AuthButton';
 
 const App = (): JSX.Element => {
