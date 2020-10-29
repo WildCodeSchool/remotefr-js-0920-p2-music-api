@@ -2,14 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { TokenContext } from '../TokenContext';
 
-function makeObjectOfDataRequest(data): Array<Record<string, any>> {
-  const dataTracks: Array<Record<string, any>> = [];
-  interface ItemPush {
-    title: string;
-    url: string;
-    image: string;
-    type: string;
-  }
+interface ItemPush {
+  title: string;
+  artist: string;
+  url: string;
+  image: string;
+}
+
+function makeObjectOfDataRequest(data): Array<ItemPush> {
+  const dataTracks: Array<ItemPush> = [];
 
   data.tracks.items.forEach((item: Record<string, any>) => {
     const i: ItemPush = {
@@ -17,14 +18,14 @@ function makeObjectOfDataRequest(data): Array<Record<string, any>> {
       url: item.external_urls.spotify,
       image:
         item.album.images !== undefined && item.album.images.length > 0 ? item.album.images[0].url : 'noImageFound',
-      type: item.type,
+      artist: item.artists.name,
     };
     dataTracks.push(i);
   });
   return dataTracks;
 }
 
-async function searchOnSpotify(token, word = 'julien'): Promise<any> {
+async function searchOnSpotify(token, word = 'julien'): Promise<Array<ItemPush>> {
   if (word === '') return [];
 
   const spotifyToken = token;
@@ -45,23 +46,22 @@ async function searchOnSpotify(token, word = 'julien'): Promise<any> {
     .then((data) => {
       return makeObjectOfDataRequest(data);
     })
-    .catch((e) => console.error(e.response));
+    .catch((e) => {
+      if (e.response.status !== 200) {
+        alert(e.response.data.error.message);
+      }
+      return [];
+    });
 }
 
 export default function SearchField(): JSX.Element {
-  interface DataShow {
-    title: string;
-    url: string;
-    image: string;
-    type: string;
-  }
   const { services } = useContext(TokenContext);
   const [fieldValue, setFieldValue] = useState('');
   const [submitValue, setSubmitValue] = useState('');
-  const [dataShow, setDataShow] = useState<Array<Record<string, DataShow>>>([]);
+  const [dataShow, setDataShow] = useState<Array<ItemPush>>([]);
 
   useEffect(() => {
-    (async (): Promise<any> => {
+    (async (): Promise<Array<ItemPush>> => {
       const d = await searchOnSpotify(services.spotify.token, submitValue);
       setDataShow(d);
       return d;
@@ -70,9 +70,9 @@ export default function SearchField(): JSX.Element {
 
   const handleOnSubmit = (e): void => {
     e.preventDefault();
-    setSubmitValue(fieldValue);
+    if (fieldValue === '') alert('Le champs est vide');
+    else setSubmitValue(fieldValue);
   };
-
   return (
     <div>
       Result : {dataShow.length > 0 ? dataShow[0].title : 'plein'} <br />
