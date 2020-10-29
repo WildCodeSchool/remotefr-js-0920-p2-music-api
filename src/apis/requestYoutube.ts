@@ -1,4 +1,4 @@
-import { fetchApi, SongInfo, youtubeDataToSongInfo } from './utils';
+import { fetchApi, SongInfo } from './utils';
 
 const baseURL = 'https://youtube.googleapis.com/youtube/v3/';
 
@@ -13,10 +13,21 @@ interface ResquestInterfaceYoutube {
   maxResults?: number;
 }
 
-const getAllIdVideo = (data): Array<string> => {
-  const dataId: Array<string> = [];
-  data.items.forEach((obj) => dataId.push(obj.id.videoId));
-  return dataId;
+const getAllIdVideo = (data): string[] => data.items.map((obj) => obj.id.videoId);
+
+export const youtubeDataToSongInfo = (data: Record<string, any>): Array<SongInfo> => {
+  return data.items.map((obj) => {
+    const regexTime = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+    const tab = regexTime.exec(obj.contentDetails.duration) as RegExpExecArray;
+
+    return {
+      title: obj.snippet.title,
+      artist: obj.snippet.channelTitle,
+      image: obj.snippet.thumbnails.medium.url,
+      url: `https://www.youtube.com/watch?v=${obj.id}`,
+      duration: `${tab[2]}:${tab[3].padStart(2, '0')}`,
+    };
+  });
 };
 
 const requestYoutube = async ({
