@@ -5,6 +5,13 @@ export interface ItemPush {
   artist: string;
   url: string;
   image: string;
+  duration: string;
+}
+
+function millisToMinutesAndSeconds(ms: number): string {
+  const minutes = Math.floor(ms / 60000);
+  const seconds = ((ms % 60000) / 1000).toFixed(0);
+  return `${minutes}:${seconds.padStart(2, '0')}`;
 }
 
 function makeObjectOfDataRequest(data): Array<ItemPush> {
@@ -16,14 +23,15 @@ function makeObjectOfDataRequest(data): Array<ItemPush> {
       url: item.external_urls.spotify,
       image:
         item.album.images !== undefined && item.album.images.length > 0 ? item.album.images[0].url : 'noImageFound',
-      artist: item.artists.name,
+      artist: item.artists[0].name,
+      duration: millisToMinutesAndSeconds(item.duration_ms),
     };
     dataTracks.push(i);
   });
   return dataTracks;
 }
 
-export async function searchOnSpotify(token, word = 'julien'): Promise<Array<ItemPush>> {
+export async function searchOnSpotify(token, word = 'julien', limitSearch = 20): Promise<Array<ItemPush>> {
   if (word === '') return [];
 
   const spotifyToken = token;
@@ -32,6 +40,7 @@ export async function searchOnSpotify(token, word = 'julien'): Promise<Array<Ite
     params: {
       q: word,
       type: 'track',
+      limit: limitSearch,
     },
     headers: {
       Authorization: `Bearer ${spotifyToken}`,

@@ -4,7 +4,7 @@ import { Switch, Route, NavLink } from 'react-router-dom';
 import { TokenContext } from '../TokenContext';
 import AuthBar from '../components/AuthBar';
 import AuthButtons from '../components/AuthButtons';
-import SongCard from '../components/SongCard';
+import Search from '../components/Search';
 
 const UnauthenticatedHome = (): JSX.Element => (
   <main className="container d-flex justify-content-center align-items-center vw-100 vh-100">
@@ -32,8 +32,7 @@ const AuthenticatedHome = (): JSX.Element => (
       <main>
         <Switch>
           <Route exact path="/">
-            <SongCard title="Lorem" author="Author" image="https://picsum.photos/200/300" service="spotify" />
-            <SongCard title="Lorem" author="Author" image="https://picsum.photos/500/700" service="youtube" />
+            <Search />
           </Route>
         </Switch>
       </main>
