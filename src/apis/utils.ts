@@ -1,16 +1,4 @@
 import axios from 'axios';
-import { ServiceName, AuthToken } from '../TokenContext';
-
-export function limitCalculQueryFromConnectedService(
-  nbTotalShow: number,
-  services: Record<ServiceName, AuthToken>
-): number {
-  let nbServ = 0;
-  Object.values(services).forEach((service: AuthToken) => {
-    if (service.token !== null) nbServ += 1;
-  });
-  return nbTotalShow / nbServ;
-}
 
 export function millisToMinutesAndSeconds(ms: number): string {
   const minutes = Math.floor(ms / 60000);
@@ -18,13 +6,12 @@ export function millisToMinutesAndSeconds(ms: number): string {
   return `${minutes}:${seconds.padStart(2, '0')}`;
 }
 
-// Interface identique Spotify/Youtube
-export interface SongInfo {
-  title: string;
-  artist: string;
-  url: string;
-  image: string;
-  duration: string;
+export function debounce<F extends (...args: any[]) => void>(fn: F, wait = 1): (...args: Parameters<F>) => void {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args): void => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), wait);
+  };
 }
 
 function toQuery(params, delimiter = '&'): string {
@@ -49,12 +36,7 @@ export const fetchApi = async (
   queryType: string,
   params
 ): Promise<Record<string, any>> => {
-  try {
-    const url = getUrl(baseUrl, queryType, params);
-    const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
-    return response.data;
-  } catch (error) {
-    alert(error.response.data.error.message);
-    return error.response;
-  }
+  const url = getUrl(baseUrl, queryType, params);
+  const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
+  return response.data;
 };

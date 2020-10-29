@@ -10,8 +10,8 @@
     "@types/node": "^12.19.1",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
-    "axios": "^0.21.0",
     "@types/react-router-dom": "^5.1.6",
+    "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -71,4 +71,3 @@
     ]
   }
 }
-

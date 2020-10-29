@@ -1,4 +1,5 @@
-import { fetchApi, SongInfo } from './utils';
+import { fetchApi } from './utils';
+import { SongInfo } from './requestServices';
 
 const baseURL = 'https://youtube.googleapis.com/youtube/v3/';
 
@@ -26,29 +27,24 @@ export const youtubeDataToSongInfo = (data): Array<SongInfo> => {
       image: obj.snippet.thumbnails.medium.url,
       url: `https://www.youtube.com/watch?v=${obj.id}`,
       duration: `${tab[2]}:${tab[3].padStart(2, '0')}`,
+      service: 'youtube',
     };
   });
 };
 
-const searchYoutube = async ({
+export const searchYoutube = async ({
   token,
   query,
   type = 'video',
   order = 'relevance',
   maxResults = 5,
 }: ResquestInterfaceYoutube): Promise<Array<SongInfo>> => {
-  try {
-    const paramsUrlSearch = { q: query, type, order, maxResults };
-    const dataSearch = await fetchApi(token, baseURL, 'search', paramsUrlSearch);
+  const paramsUrlSearch = { q: query, type, order, maxResults };
+  const dataSearch = await fetchApi(token, baseURL, 'search', paramsUrlSearch);
 
-    const allIdVideo = getAllIdVideo(dataSearch);
-    const paramsUrlVideos = { part: 'id,contentDetails,snippet', id: allIdVideo.join(',') };
-    const dataVideos = await fetchApi(token, baseURL, 'videos', paramsUrlVideos);
+  const allIdVideo = getAllIdVideo(dataSearch);
+  const paramsUrlVideos = { part: 'id,contentDetails,snippet', id: allIdVideo.join(',') };
+  const dataVideos = await fetchApi(token, baseURL, 'videos', paramsUrlVideos);
 
-    return youtubeDataToSongInfo(dataVideos);
-  } catch (error) {
-    return error.response;
-  }
+  return youtubeDataToSongInfo(dataVideos);
 };
-
-export default searchYoutube;
