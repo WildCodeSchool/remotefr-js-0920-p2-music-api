@@ -5,14 +5,20 @@ interface SongCardProps {
   title: string;
   author: string;
   image: string;
+  duration: string;
+  link: string;
   service: ServiceName;
 }
 
-const SongCard = ({ title, author, image, service }: SongCardProps): JSX.Element => (
-  <article className={`song-card song-card-${service}`}>
-    <img src={image} alt={`Miniature de ${title}`} />
-    <h3>{title}</h3>
-    <span>{author}</span>
-  </article>
+const SongCard = ({ title, author, image, duration, link, service }: SongCardProps): JSX.Element => (
+  <a className="song-card-a" href={link} rel="noopener noreferrer" target="_blank">
+    <article className={`song-card song-card-${service}`}>
+      <img className="image" src={image} alt={`Miniature de ${title}`} />
+      <h5 className="title">{title}</h5>
+      <span className="author">{author}</span>
+      <i className={`icon fab fa-${service} text-${service}`} />
+      <span className="duration">{duration}</span>
+    </article>
+  </a>
 );
 export default SongCard;
