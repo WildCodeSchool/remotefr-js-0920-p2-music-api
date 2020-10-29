@@ -11,6 +11,7 @@ export default function Search(): JSX.Element {
   const [submitValue, setSubmitValue] = useState('');
   const [dataSpotify, setDataSpotify] = useState<Array<ItemPush>>([]);
   const limit = limitCalculQueryFromConnectedService(20, services);
+
   useEffect(() => {
     (async (): Promise<Array<ItemPush>> => {
       const d = await searchOnSpotify(services.spotify.token, submitValue, limit);

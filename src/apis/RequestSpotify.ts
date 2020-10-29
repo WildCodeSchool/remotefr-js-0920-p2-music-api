@@ -15,10 +15,8 @@ function millisToMinutesAndSeconds(ms: number): string {
 }
 
 function makeObjectOfDataRequest(data): Array<ItemPush> {
-  const dataTracks: Array<ItemPush> = [];
-
-  data.tracks.items.forEach((item: Record<string, any>) => {
-    const i: ItemPush = {
+  return data.tracks.items.map((item) => {
+    return {
       title: item.name,
       url: item.external_urls.spotify,
       image:
@@ -26,9 +24,7 @@ function makeObjectOfDataRequest(data): Array<ItemPush> {
       artist: item.artists[0].name,
       duration: millisToMinutesAndSeconds(item.duration_ms),
     };
-    dataTracks.push(i);
   });
-  return dataTracks;
 }
 
 export async function searchOnSpotify(token, word = 'julien', limitSearch = 20): Promise<Array<ItemPush>> {
