@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { TokenContext } from '../TokenContext';
-import { ItemPush, searchOnSpotify } from '../apis/RequestSpotify';
+import { ItemPush, searchOnSpotify } from '../apis/requestSpotify';
 import SongCard from './SongCard';
 import SearchField from './SearchField';
 import limitCalculQueryFromConnectedService from '../apis/utils';
@@ -31,7 +31,17 @@ export default function Search(): JSX.Element {
       {dataSpotify.length > 0
         ? dataSpotify.map(
             (i): JSX.Element => {
-              return <SongCard key={i.url} title={i.title} author={i.artist} image={i.image} service="spotify" />;
+              return (
+                <SongCard
+                  key={i.url}
+                  title={i.title}
+                  author={i.artist}
+                  image={i.image}
+                  duration={i.duration}
+                  link={i.url}
+                  service="spotify"
+                />
+              );
             }
           )
         : 'Aucun résultat'}
