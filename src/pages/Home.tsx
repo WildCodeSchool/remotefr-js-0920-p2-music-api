@@ -6,8 +6,6 @@ import AuthBar from '../components/AuthBar';
 import AuthButtons from '../components/AuthButtons';
 import SongCard from '../components/SongCard';
 
-import requestYoutube from '../apis/requestYoutube';
-
 const UnauthenticatedHome = (): JSX.Element => (
   <main className="container d-flex justify-content-center align-items-center vw-100 vh-100">
     <Jumbotron className="m-2 shadow d-flex flex-column align-items-center">
@@ -17,47 +15,31 @@ const UnauthenticatedHome = (): JSX.Element => (
   </main>
 );
 
-const AuthenticatedHome = (): JSX.Element => {
-  let data = {};
-  const {
-    services: { youtube },
-  } = useContext(TokenContext);
+const AuthenticatedHome = (): JSX.Element => (
+  <>
+    <AuthBar />
+    <div className="container">
+      <nav>
+        <ul className="nav nav-tabs d-flex justify-content-center">
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/">
+              Recherche
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
 
-  const getDataYoutube = async (): Promise<any> => {
-    data = await requestYoutube({ token: youtube.token as string, query: 'julien Doré' });
-    console.log('Data :>> ', data);
-  };
-
-  // console.log('getDataYoutube :>> ', data);
-
-  getDataYoutube();
-
-  return (
-    <>
-      <AuthBar />
-      <div className="container">
-        <nav>
-          <ul className="nav nav-tabs d-flex justify-content-center">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Recherche
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
-
-        <main>
-          <Switch>
-            <Route exact path="/">
-              <SongCard title="Lorem" author="Author" image="https://picsum.photos/200/300" service="spotify" />
-              <SongCard title="Lorem" author="Author" image="https://picsum.photos/500/700" service="youtube" />
-            </Route>
-          </Switch>
-        </main>
-      </div>
-    </>
-  );
-};
+      <main>
+        <Switch>
+          <Route exact path="/">
+            <SongCard title="Lorem" author="Author" image="https://picsum.photos/200/300" service="spotify" />
+            <SongCard title="Lorem" author="Author" image="https://picsum.photos/500/700" service="youtube" />
+          </Route>
+        </Switch>
+      </main>
+    </div>
+  </>
+);
 
 const Home = (): JSX.Element => {
   const { services } = useContext(TokenContext);
