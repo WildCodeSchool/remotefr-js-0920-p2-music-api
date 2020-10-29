@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default function limitCalculQueryFromConnectedService(nbTotalShow, services): number {
+export function limitCalculQueryFromConnectedService(nbTotalShow, services): number {
   let nbServ = 0;
   Object.values(services).forEach((service: any) => {
     if (service.token !== null) nbServ += 1;

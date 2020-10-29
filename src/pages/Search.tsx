@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { TokenContext } from '../TokenContext';
-import { ItemPush, searchOnSpotify } from '../apis/requestSpotify';
-import SongCard from './SongCard';
-import SearchField from './SearchField';
-import limitCalculQueryFromConnectedService from '../apis/utils';
+import { searchOnSpotify } from '../apis/requestSpotify';
+import SongCard from '../components/SongCard';
+import SearchField from '../components/SearchField';
+import { SongInfo, limitCalculQueryFromConnectedService } from '../apis/utils';
 
 export default function Search(): JSX.Element {
   const { services } = useContext(TokenContext);
   const [fieldValue, setFieldValue] = useState('');
   const [submitValue, setSubmitValue] = useState('');
-  const [dataSpotify, setDataSpotify] = useState<Array<ItemPush>>([]);
+  const [dataSpotify, setDataSpotify] = useState<SongInfo[]>([]);
+
   const limit = limitCalculQueryFromConnectedService(20, services);
 
   useEffect(() => {
-    (async (): Promise<Array<ItemPush>> => {
-      const d = await searchOnSpotify(services.spotify.token, submitValue, limit);
+    (async (): Promise<Array<SongInfo>> => {
+      const d = await searchOnSpotify(services.spotify.token as string, submitValue, limit);
       setDataSpotify(d);
       return d;
     })();

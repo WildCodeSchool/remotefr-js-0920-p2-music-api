@@ -1,20 +1,7 @@
 import axios from 'axios';
+import { SongInfo, millisToMinutesAndSeconds } from './utils';
 
-export interface ItemPush {
-  title: string;
-  artist: string;
-  url: string;
-  image: string;
-  duration: string;
-}
-
-function millisToMinutesAndSeconds(ms: number): string {
-  const minutes = Math.floor(ms / 60000);
-  const seconds = ((ms % 60000) / 1000).toFixed(0);
-  return `${minutes}:${seconds.padStart(2, '0')}`;
-}
-
-function makeObjectOfDataRequest(data): Array<ItemPush> {
+function makeObjectOfDataRequest(data): SongInfo[] {
   return data.tracks.items.map((item) => {
     return {
       title: item.name,
@@ -27,7 +14,8 @@ function makeObjectOfDataRequest(data): Array<ItemPush> {
   });
 }
 
-export async function searchOnSpotify(token, word = 'julien', limitSearch = 20): Promise<Array<ItemPush>> {
+// eslint-disable-next-line import/prefer-default-export
+export async function searchOnSpotify(token: string, word: string, limitSearch = 20): Promise<SongInfo[]> {
   if (word === '') return [];
 
   const spotifyToken = token;
