@@ -24,7 +24,7 @@ const LoginButton = ({ service, config }: { service: ServiceName; config: TokenC
   const { authorizationUrl, cliendId, scope, redirectUri } = config;
   return (
     <OAuth2Login
-      className={`btn btn-outline-${service}`}
+      className={`btn btn-outline-${service} btn-auth`}
       authorizationUrl={authorizationUrl}
       responseType="token"
       clientId={cliendId}
