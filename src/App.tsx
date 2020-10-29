@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
 import { AuthTokens, getServicesLocalStorage, ServiceName, TokenContext, useServices } from './TokenContext';
-
-import SearchField from './components/SearchField';
-import AuthButtons from './components/AuthButtons';
+import Home from './pages/Home';
 
 const App = (): JSX.Element => {
   const [services, setToken, removeToken] = useServices(getServicesLocalStorage());
@@ -20,10 +18,9 @@ const App = (): JSX.Element => {
 
   return (
     <TokenContext.Provider value={tokenContextValue}>
-      <div className="App">
-        <AuthButtons />
-        <SearchField />
-      </div>
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
     </TokenContext.Provider>
   );
 };
