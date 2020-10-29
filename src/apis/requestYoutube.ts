@@ -15,7 +15,7 @@ interface ResquestInterfaceYoutube {
 
 const getAllIdVideo = (data): string[] => data.items.map((obj) => obj.id.videoId);
 
-export const youtubeDataToSongInfo = (data: Record<string, any>): Array<SongInfo> => {
+export const youtubeDataToSongInfo = (data): Array<SongInfo> => {
   return data.items.map((obj) => {
     const regexTime = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
     const tab = regexTime.exec(obj.contentDetails.duration) as RegExpExecArray;

@@ -1,8 +1,12 @@
 import axios from 'axios';
+import { ServiceName, AuthToken } from '../TokenContext';
 
-export function limitCalculQueryFromConnectedService(nbTotalShow, services): number {
+export function limitCalculQueryFromConnectedService(
+  nbTotalShow: number,
+  services: Record<ServiceName, AuthToken>
+): number {
   let nbServ = 0;
-  Object.values(services).forEach((service: any) => {
+  Object.values(services).forEach((service: AuthToken) => {
     if (service.token !== null) nbServ += 1;
   });
   return nbTotalShow / nbServ;
@@ -50,8 +54,7 @@ export const fetchApi = async (
     const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
     return response.data;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log('error.response :>> ', error.response);
+    alert(error.response.data.error.message);
     return error.response;
   }
 };

@@ -6,7 +6,7 @@ export default function SearchField({ handleOnSubmit, fieldValue, setFieldValue 
     <div>
       <form onSubmit={(e): void => handleOnSubmit(e)}>
         <input type="text" value={fieldValue} onChange={(e): void => setFieldValue(e.target.value)} />
-        <button type="submit">Submit</button>
+        <button type="submit">Envoyer</button>
       </form>
     </div>
   );

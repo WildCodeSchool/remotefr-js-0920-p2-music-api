@@ -33,7 +33,7 @@ const LoginButton = ({ service, config }: { service: ServiceName; config: TokenC
       onSuccess={handleSuccess}
       onFailure={handleFailure}
     >
-      <i className={`fab fa-${service} fa-lg`} /> Login with {service}
+      <i className={`fab fa-${service} fa-lg`} /> Connexion à {service}
     </OAuth2Login>
   );
 };
