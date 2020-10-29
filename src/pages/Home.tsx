@@ -32,8 +32,25 @@ const AuthenticatedHome = (): JSX.Element => (
       <main>
         <Switch>
           <Route exact path="/">
-            <SongCard title="Lorem" author="Author" image="https://picsum.photos/200/300" service="spotify" />
-            <SongCard title="Lorem" author="Author" image="https://picsum.photos/500/700" service="youtube" />
+            <div className="d-flex flex-column align-items-center">
+              <SongCard
+                title="Here Comes The Sun - Remastered 2009"
+                author="The Beatles"
+                image="https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25"
+                duration="3:05"
+                link="https://open.spotify.com/track/6dGnYIeXmHdcikdzNNDMm2"
+                service="spotify"
+              />
+              <hr className="w-75" />
+              <SongCard
+                title="Queen – Bohemian Rhapsody (Official Video Remastered)"
+                author="Queen Official"
+                image="https://images-na.ssl-images-amazon.com/images/I/71WVq7VqUkL._SX522_.jpg"
+                duration="5:59"
+                link="https://www.youtube.com/watch?v=fJ9rUzIMcZQ"
+                service="youtube"
+              />
+            </div>
           </Route>
         </Switch>
       </main>
