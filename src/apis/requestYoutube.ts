@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { getUrl, SongInfo, youtubeDataToSongInfo } from './utils';
+import { fetchApi, SongInfo, youtubeDataToSongInfo } from './utils';
 
 const baseURL = 'https://youtube.googleapis.com/youtube/v3/';
 
@@ -13,17 +12,6 @@ interface ResquestInterfaceYoutube {
   order?: OrderYoutube;
   maxResults?: number;
 }
-
-const fetchApi = async (url: string, token: string): Promise<Record<string, any>> => {
-  try {
-    const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
-    return response.data;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log('error.response :>> ', error.response);
-    return error.response;
-  }
-};
 
 const getAllIdVideo = (data): Array<string> => {
   const dataId: Array<string> = [];
@@ -40,13 +28,11 @@ const requestYoutube = async ({
 }: ResquestInterfaceYoutube): Promise<Array<SongInfo>> => {
   try {
     const paramsUrlSearch = { q: query, type, order, maxResults };
-    const urlSearch = getUrl(baseURL, 'search', paramsUrlSearch);
-    const dataSearch = await fetchApi(urlSearch, token);
+    const dataSearch = await fetchApi(token, baseURL, 'search', paramsUrlSearch);
 
     const allIdVideo = getAllIdVideo(dataSearch);
     const paramsUrlVideos = { part: 'id,contentDetails,snippet', id: allIdVideo.join(',') };
-    const urlVideos = getUrl(baseURL, 'videos', paramsUrlVideos);
-    const dataVideos = await fetchApi(urlVideos, token);
+    const dataVideos = await fetchApi(token, baseURL, 'videos', paramsUrlVideos);
 
     return youtubeDataToSongInfo(dataVideos);
   } catch (error) {
