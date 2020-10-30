@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+// For internal use
+$service-colors: (
+  'youtube': #ff0000,
+  'spotify': #1db954,
+);
+
+// To tell boostrap to make service colored classes
+$theme-colors: $service-colors;
+
+$font-family-sans-serif: 'Roboto', sans-serif;
+
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'panel';
+@import 'song-card';
+
+body {
+  margin: 0;
+}
+
+.btn-auth {
+  min-width: 230px;
+  margin: map-get($spacers, 2);
+}
+
+@include media-breakpoint-down(md) {
+  .title-md-small {
+    font-size: 1rem;
+  }
+}

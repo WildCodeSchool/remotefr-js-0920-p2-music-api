@@ -1,0 +1,76 @@
+.song-card-a {
+  display: contents;
+}
+
+.song-card-a,
+.song-card-a:hover {
+  color: unset;
+  text-decoration: unset;
+}
+
+.song-card {
+  display: grid;
+  grid-template-columns: 128px 1fr auto;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    'image title icon'
+    'image author duration';
+  column-gap: 1rem;
+
+  margin: map-get($spacers, 3);
+
+  height: 128px;
+
+  .image {
+    grid-area: image;
+
+    width: 128px;
+    height: 128px;
+
+    object-fit: cover;
+
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 0.25rem;
+  }
+  .title {
+    grid-area: title;
+    margin: 0;
+    font-weight: $font-weight-bold;
+    align-self: flex-end;
+  }
+  .author {
+    grid-area: author;
+    color: $text-muted;
+  }
+  .icon {
+    grid-area: icon;
+    place-self: flex-end;
+  }
+  .duration {
+    grid-area: duration;
+    color: $text-muted;
+  }
+
+  @include media-breakpoint-down(sm) {
+    grid-template-columns: 64px 1fr auto;
+
+    height: 64px;
+
+    .image {
+      width: 64px;
+      height: 64px;
+    }
+
+    .title {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+@each $service, $color in $service-colors {
+  .song-card-#{$service}:hover {
+    .title {
+      color: $color;
+    }
+  }
+}

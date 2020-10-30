@@ -1,0 +1,22 @@
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 90vw;
+
+  background-color: white;
+
+  /* Bigger than 100% to hide the box shadow */
+  transform: translateX(120%);
+
+  transition: transform 0.5s ease;
+}
+
+.panel.active {
+  transform: translateX(0);
+}
+
+.panel .close-button {
+}
