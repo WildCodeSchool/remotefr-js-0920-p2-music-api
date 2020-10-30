@@ -6,7 +6,7 @@ export function millisToMinutesAndSeconds(ms: number): string {
   return `${minutes}:${seconds.padStart(2, '0')}`;
 }
 
-export function debounce<F extends (...args: any[]) => void>(fn: F, wait = 1): (...args: Parameters<F>) => void {
+export function debounce<F extends (...args: never[]) => void>(fn: F, wait = 1): (...args: Parameters<F>) => void {
   let timeout: ReturnType<typeof setTimeout>;
   return (...args): void => {
     clearTimeout(timeout);
@@ -44,12 +44,12 @@ export const getUrl = (baseUrl, queryType, params): string => {
   return encodeURI(`${baseUrl}${queryType}?${toQuery({ ...params })}`);
 };
 
-export const fetchApi = async (
+export const fetchApi = async <T>(
   token: string,
   baseUrl: string,
   queryType: string,
   params
-): Promise<Record<string, any>> => {
+): Promise<Record<string, T>> => {
   const url = getUrl(baseUrl, queryType, params);
   const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
   return response.data;
