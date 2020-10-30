@@ -49,6 +49,7 @@ export async function searchServices(
   for (const request of await Promise.allSettled(requests)) {
     // Log rejected promises
     if (request.status === 'rejected') {
+      // eslint-disable-next-line no-console
       console.error(request.reason);
     }
     // Only keep results from fufilled requests
