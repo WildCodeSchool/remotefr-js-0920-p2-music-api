@@ -1,6 +1,7 @@
 import { AuthToken, ServiceName } from '../TokenContext';
 import { searchSpotify } from './requestSpotify';
 import { searchYoutube } from './requestYoutube';
+import { interleave } from './utils';
 
 // Interface identique Spotify/Youtube
 export interface SongInfo {
@@ -43,7 +44,7 @@ export async function searchServices(
     );
   }
 
-  let songs: SongInfo[] = [];
+  const songs: SongInfo[][] = [];
 
   for (const request of await Promise.allSettled(requests)) {
     // Log rejected promises
@@ -52,9 +53,9 @@ export async function searchServices(
     }
     // Only keep results from fufilled requests
     else {
-      songs = songs.concat(request.value);
+      songs.push(request.value);
     }
   }
 
-  return songs;
+  return interleave(songs);
 }

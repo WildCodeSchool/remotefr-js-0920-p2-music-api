@@ -8,9 +8,8 @@ const SearchResults = ({ songs }: { songs: SongInfo[] }): JSX.Element =>
   songs.length > 0 ? (
     <ul className="list-unstyled d-flex flex-column align-items-center">
       {songs.map((song, i) => (
-        <li className="w-100">
+        <li className="w-100" key={song.url}>
           <SongCard
-            key={song.url}
             title={song.title}
             author={song.artist}
             image={song.image}

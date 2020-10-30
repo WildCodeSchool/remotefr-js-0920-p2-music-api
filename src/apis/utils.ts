@@ -14,6 +14,20 @@ export function debounce<F extends (...args: any[]) => void>(fn: F, wait = 1): (
   };
 }
 
+export function interleave<T>(arrays: T[][]): T[] {
+  if (arrays.length === 0) return [];
+
+  const flattenArray: T[] = [];
+
+  for (let i = 0; i < arrays[0].length; i += 1) {
+    for (let j = 0; j < arrays.length; j += 1) {
+      flattenArray.push(arrays[j][i]);
+    }
+  }
+
+  return flattenArray;
+}
+
 function toQuery(params, delimiter = '&'): string {
   const keys = Object.keys(params);
 
