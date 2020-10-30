@@ -43,8 +43,18 @@ export async function searchServices(
     );
   }
 
-  // Only keep results from fufilled requests
-  return (await Promise.allSettled(requests))
-    .filter((p) => p.status === 'fulfilled')
-    .flatMap((p) => (p as PromiseFulfilledResult<SongInfo[]>).value);
+  let songs: SongInfo[] = [];
+
+  for (const request of await Promise.allSettled(requests)) {
+    // Log rejected promises
+    if (request.status === 'rejected') {
+      console.error(request.reason);
+    }
+    // Only keep results from fufilled requests
+    else {
+      songs = songs.concat(request.value);
+    }
+  }
+
+  return songs;
 }

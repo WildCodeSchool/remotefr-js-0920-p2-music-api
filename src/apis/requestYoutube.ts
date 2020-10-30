@@ -16,17 +16,21 @@ interface ResquestInterfaceYoutube {
 
 const getAllIdVideo = (data): string[] => data.items.map((obj) => obj.id.videoId);
 
+const regexISODuration = /P((([0-9]*\.?[0-9]*)Y)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)W)?(([0-9]*\.?[0-9]*)D)?)?(T(([0-9]*\.?[0-9]*)H)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)S)?)?/;
+
 export const youtubeDataToSongInfo = (data): Array<SongInfo> => {
   return data.items.map((obj) => {
-    const regexTime = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-    const tab = regexTime.exec(obj.contentDetails.duration) as RegExpExecArray;
+    const match = regexISODuration.exec(obj.contentDetails.duration) as RegExpExecArray;
+    const hours = Number(match[12] ?? 0);
+    const minutes = Number(match[14] ?? 0);
+    const seconds = match[16] ?? '0';
 
     return {
       title: obj.snippet.title,
       artist: obj.snippet.channelTitle,
       image: obj.snippet.thumbnails.medium.url,
       url: `https://www.youtube.com/watch?v=${obj.id}`,
-      duration: `${tab[2]}:${tab[3].padStart(2, '0')}`,
+      duration: `${hours * 60 + minutes}:${seconds.padStart(2, '0')}`,
       service: 'youtube',
     };
   });
