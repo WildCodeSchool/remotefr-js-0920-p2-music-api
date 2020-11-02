@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import { TokenContext } from '../TokenContext';
 import SongCard from '../components/SongCard';
 import { debounce } from '../apis/utils';
@@ -26,38 +26,51 @@ const SearchResults = ({ songs }: { songs: SongInfo[] }): JSX.Element =>
     <p className="text-center">Aucun résultat</p>
   );
 
-export default function Search(): JSX.Element {
+function Search({ query }: { query: string }): JSX.Element {
   const { services } = useContext(TokenContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [songs, setSongs] = useState<SongInfo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchSongs, setSearchSongs] = useState<SongInfo[]>([]);
 
   const debouncedSearch = useCallback(
-    debounce((query: string) => {
+    debounce((query_: string) => {
+      if (query_ === '') return;
+
       setIsLoading(true);
-      searchServices(services, query, 20)
-        .then(setSongs)
+      searchServices(services, query_, 20)
+        .then(setSearchSongs)
         .finally(() => setIsLoading(false));
     }, 1000),
     [services]
   );
+  useEffect(() => {
+    debouncedSearch(query);
+  }, [query, services]);
+
+  return isLoading ? (
+    <div className="d-block m-auto spinner-border" role="status">
+      <span className="sr-only">Loading...</span>
+    </div>
+  ) : (
+    <SearchResults songs={searchSongs} />
+  );
+}
+
+export default function SearchAndTrending(): JSX.Element {
+  const [searchQuery, setSearchQuery] = useState('');
+  const showTrends = useMemo(() => searchQuery === '', [searchQuery]);
 
   return (
     <>
       <input
         className="form-control form-control-lg my-3"
         type="text"
-        onChange={(e): void => debouncedSearch(e.target.value)}
+        value={searchQuery}
+        onChange={(e): void => setSearchQuery(e.target.value)}
         placeholder="Rechercher une musique..."
         aria-label="Nom à rechercher"
       />
 
-      {isLoading ? (
-        <div className="d-block m-auto spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      ) : (
-        <SearchResults songs={songs} />
-      )}
+      {showTrends ? <span>Trends here</span> : <Search query={searchQuery} />}
     </>
   );
 }
