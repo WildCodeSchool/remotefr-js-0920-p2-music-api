@@ -1,35 +1,16 @@
-import React, { useState, useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { TokenContext } from '../TokenContext';
-import SongCard from '../components/SongCard';
+import { SongCardList } from '../components/SongCard';
 import { debounce } from '../apis/utils';
-import { searchServices, SongInfo } from '../apis/requestServices';
+import { searchServices, SongInfo, trendingServices } from '../apis/requestServices';
 
 const SearchResults = ({ songs }: { songs: SongInfo[] }): JSX.Element =>
-  songs.length > 0 ? (
-    <ul className="list-unstyled d-flex flex-column align-items-center">
-      {songs.map((song, i) => (
-        <li className="w-100" key={song.url}>
-          <SongCard
-            title={song.title}
-            author={song.artist}
-            image={song.image}
-            duration={song.duration}
-            link={song.url}
-            service={song.service}
-          />
-          {/* HR except on last iteration */}
-          {i + 1 !== songs.length && <hr />}
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p className="text-center">Aucun résultat</p>
-  );
+  songs.length > 0 ? <SongCardList songs={songs} /> : <p className="text-center">Aucun résultat</p>;
 
 function Search({ query }: { query: string }): JSX.Element {
   const { services } = useContext(TokenContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchSongs, setSearchSongs] = useState<SongInfo[]>([]);
+  const [songs, setSongs] = useState<SongInfo[]>([]);
 
   const debouncedSearch = useCallback(
     debounce((query_: string) => {
@@ -37,7 +18,7 @@ function Search({ query }: { query: string }): JSX.Element {
 
       setIsLoading(true);
       searchServices(services, query_, 20)
-        .then(setSearchSongs)
+        .then(setSongs)
         .finally(() => setIsLoading(false));
     }, 1000),
     [services]
@@ -48,16 +29,47 @@ function Search({ query }: { query: string }): JSX.Element {
 
   return isLoading ? (
     <div className="d-block m-auto spinner-border" role="status">
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">Chargement...</span>
     </div>
   ) : (
-    <SearchResults songs={searchSongs} />
+    <SearchResults songs={songs} />
+  );
+}
+
+function Trending(): JSX.Element {
+  const { services } = useContext(TokenContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const [songs, setSongs] = useState<SongInfo[]>([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    trendingServices(services)
+      .then((songs_) => {
+        setSongs(songs_);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [services]);
+
+  return (
+    <>
+      <h1>Tendances</h1>
+      {isLoading ? (
+        <div className="d-block m-auto spinner-border" role="status">
+          <span className="sr-only">Chargement...</span>
+        </div>
+      ) : (
+        <SearchResults songs={songs} />
+      )}
+    </>
   );
 }
 
 export default function SearchAndTrending(): JSX.Element {
   const [searchQuery, setSearchQuery] = useState('');
-  const showTrends = useMemo(() => searchQuery === '', [searchQuery]);
+  const showTrending = searchQuery === '';
 
   return (
     <>
@@ -70,7 +82,7 @@ export default function SearchAndTrending(): JSX.Element {
         aria-label="Nom à rechercher"
       />
 
-      {showTrends ? <span>Trends here</span> : <Search query={searchQuery} />}
+      {showTrending ? <Trending /> : <Search query={searchQuery} />}
     </>
   );
 }

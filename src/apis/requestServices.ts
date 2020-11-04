@@ -1,6 +1,6 @@
 import { AuthToken, ServiceName } from '../TokenContext';
-import { searchSpotify } from './requestSpotify';
-import { searchYoutube } from './requestYoutube';
+import { searchSpotify, trendingSpotify } from './requestSpotify';
+import { searchYoutube, trendingYoutube } from './requestYoutube';
 import { interleave } from './utils';
 
 // Interface identique Spotify/Youtube
@@ -42,6 +42,33 @@ export async function searchServices(
         maxResults: perService,
       })
     );
+  }
+
+  const songs: SongInfo[][] = [];
+
+  for (const request of await Promise.allSettled(requests)) {
+    // Log rejected promises
+    if (request.status === 'rejected') {
+      // eslint-disable-next-line no-console
+      console.error(request.reason);
+    }
+    // Only keep results from fufilled requests
+    else {
+      songs.push(request.value);
+    }
+  }
+
+  return interleave(songs);
+}
+
+export async function trendingServices(services: Record<ServiceName, AuthToken>): Promise<SongInfo[]> {
+  const requests: Promise<SongInfo[]>[] = [];
+
+  if (services.spotify.token != null) {
+    requests.push(trendingSpotify(services.spotify.token));
+  }
+  if (services.youtube.token != null) {
+    requests.push(trendingYoutube({ token: services.youtube.token }));
   }
 
   const songs: SongInfo[][] = [];
