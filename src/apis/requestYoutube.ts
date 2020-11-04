@@ -8,13 +8,22 @@ type OrderYoutube = 'date' | 'rating' | 'relevance' | 'title' | 'videoCount' | '
 
 interface ResquestInterfaceYoutube {
   token: string;
-  query: string;
+  query?: string;
   type?: TypeYoutube;
   order?: OrderYoutube;
   maxResults?: number;
+  regionCode?: string;
+  videoCategoryId?: number;
 }
 
-const getAllIdVideo = (data): string[] => data.items.map((obj) => obj.id.videoId);
+const getAllIdVideo = (data): string[] => data.items.map((obj) => obj.id.videoId || obj.id);
+
+const fechtApiDetailsVideo = async <T>(token, data): Promise<Record<string, T>> => {
+  const allIdVideo = getAllIdVideo(data);
+  const paramsUrlVideos = { part: 'id,contentDetails,snippet', id: allIdVideo.join(',') };
+
+  return fetchApi(token, baseURL, 'videos', paramsUrlVideos);
+};
 
 const regexISODuration = /P((([0-9]*\.?[0-9]*)Y)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)W)?(([0-9]*\.?[0-9]*)D)?)?(T(([0-9]*\.?[0-9]*)H)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)S)?)?/;
 
@@ -46,9 +55,22 @@ export const searchYoutube = async ({
   const paramsUrlSearch = { q: query, type, order, maxResults };
   const dataSearch = await fetchApi(token, baseURL, 'search', paramsUrlSearch);
 
-  const allIdVideo = getAllIdVideo(dataSearch);
-  const paramsUrlVideos = { part: 'id,contentDetails,snippet', id: allIdVideo.join(',') };
-  const dataVideos = await fetchApi(token, baseURL, 'videos', paramsUrlVideos);
+  const dataVideos = await fechtApiDetailsVideo(token, dataSearch);
+
+  return youtubeDataToSongInfo(dataVideos);
+};
+
+// trendingYoutube
+export const trendingYoutube = async ({
+  token,
+  regionCode = 'fr',
+  videoCategoryId = 10,
+  maxResults = 5,
+}: ResquestInterfaceYoutube): Promise<Array<SongInfo>> => {
+  const paramsUrlTrend = { chart: 'mostPopular', regionCode, videoCategoryId, maxResults };
+  const dataTrend = await fetchApi(token, baseURL, 'videos', paramsUrlTrend);
+
+  const dataVideos = await fechtApiDetailsVideo(token, dataTrend);
 
   return youtubeDataToSongInfo(dataVideos);
 };
