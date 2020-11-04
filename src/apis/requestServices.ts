@@ -25,11 +25,11 @@ export function limitPerService(totalToShow: number, services: Record<ServiceNam
 export async function searchServices(
   services: Record<ServiceName, AuthToken>,
   query: string,
-  totalToShow = 20
+  limit = 20
 ): Promise<SongInfo[]> {
   const requests: Promise<SongInfo[]>[] = [];
 
-  const perService = limitPerService(totalToShow, services);
+  const perService = limitPerService(limit, services);
 
   if (services.spotify.token != null) {
     requests.push(searchSpotify(services.spotify.token, query, perService));
@@ -61,14 +61,16 @@ export async function searchServices(
   return interleave(songs);
 }
 
-export async function trendingServices(services: Record<ServiceName, AuthToken>): Promise<SongInfo[]> {
+export async function trendingServices(services: Record<ServiceName, AuthToken>, limit = 20): Promise<SongInfo[]> {
   const requests: Promise<SongInfo[]>[] = [];
 
+  const perService = limitPerService(limit, services);
+
   if (services.spotify.token != null) {
-    requests.push(trendingSpotify(services.spotify.token));
+    requests.push(trendingSpotify(services.spotify.token, perService));
   }
   if (services.youtube.token != null) {
-    requests.push(trendingYoutube({ token: services.youtube.token }));
+    requests.push(trendingYoutube({ token: services.youtube.token, maxResults: perService }));
   }
 
   const songs: SongInfo[][] = [];
