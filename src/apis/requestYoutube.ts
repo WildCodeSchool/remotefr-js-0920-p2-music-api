@@ -6,7 +6,7 @@ const baseURL = 'https://youtube.googleapis.com/youtube/v3/';
 type TypeYoutube = 'video' | 'playlist' | 'channel';
 type OrderYoutube = 'date' | 'rating' | 'relevance' | 'title' | 'videoCount' | 'viewCount';
 
-interface ResquestInterfaceYoutube {
+interface RequestInterfaceYoutube {
   token: string;
   query?: string;
   type?: TypeYoutube;
@@ -51,7 +51,7 @@ export const searchYoutube = async ({
   type = 'video',
   order = 'relevance',
   maxResults = 5,
-}: ResquestInterfaceYoutube): Promise<Array<SongInfo>> => {
+}: RequestInterfaceYoutube): Promise<Array<SongInfo>> => {
   const paramsUrlSearch = { q: query, type, order, maxResults };
   const dataSearch = await fetchApi(token, baseURL, 'search', paramsUrlSearch);
 
@@ -66,7 +66,7 @@ export const trendingYoutube = async ({
   regionCode = 'fr',
   videoCategoryId = 10,
   maxResults = 5,
-}: ResquestInterfaceYoutube): Promise<Array<SongInfo>> => {
+}: RequestInterfaceYoutube): Promise<Array<SongInfo>> => {
   const paramsUrlTrend = { chart: 'mostPopular', regionCode, videoCategoryId, maxResults };
   const dataTrend = await fetchApi(token, baseURL, 'videos', paramsUrlTrend);
 
