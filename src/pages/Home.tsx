@@ -3,7 +3,7 @@ import { Switch, Route, NavLink } from 'react-router-dom';
 import { TokenContext } from '../TokenContext';
 import AuthBar from '../components/AuthBar';
 import AuthButtons from '../components/AuthButtons';
-import Search from './Search';
+import SearchAndTrending from './SearchAndTrending';
 
 const UnauthenticatedHome = (): JSX.Element => (
   <main className="container d-flex justify-content-center align-items-center vw-100 vh-100">
@@ -31,7 +31,7 @@ const AuthenticatedHome = (): JSX.Element => (
       <main>
         <Switch>
           <Route exact path="/">
-            <Search />
+            <SearchAndTrending />
           </Route>
         </Switch>
       </main>
