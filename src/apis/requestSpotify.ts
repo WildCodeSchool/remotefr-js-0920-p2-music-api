@@ -33,7 +33,7 @@ export async function searchSpotify(token: string, query: string, limit = 20): P
   return makeObjectOfDataRequest(response.data);
 }
 
-export async function trendingSpotify(token: string, playlistId?: string): Promise<SongInfo[]> {
+export async function trendingSpotify(token: string, limit = 20, playlistId?: string): Promise<SongInfo[]> {
   const idTop50France = '37i9dQZEVXbIPWwFssbupI';
   const idForUrl = playlistId ?? idTop50France;
   const url = `https://api.spotify.com/v1/playlists/${idForUrl}`;
@@ -47,5 +47,5 @@ export async function trendingSpotify(token: string, playlistId?: string): Promi
   };
   const { data } = await axios.get(url, config);
   data.tracks.items = data.tracks.items.map((item) => item.track);
-  return makeObjectOfDataRequest(data);
+  return makeObjectOfDataRequest(data).slice(0, limit);
 }
