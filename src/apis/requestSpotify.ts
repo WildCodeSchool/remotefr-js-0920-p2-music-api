@@ -13,21 +13,6 @@ function makeObjectOfDataRequest(data): SongInfo[] {
   }));
 }
 
-function makeObjectOfDataTrendRequest(data): SongInfo[] {
-  return data.tracks.items.map((item) => ({
-    title: item.track.name,
-    url: item.track.external_urls.spotify,
-    image:
-      item.track.album.images !== undefined && item.track.album.images.length > 0
-        ? item.track.album.images[0].url
-        : 'noImageFound',
-    artist: item.track.artists[0].name,
-    duration: millisToMinutesAndSeconds(item.track.duration_ms),
-    service: 'spotify',
-  }));
-}
-
-// eslint-disable-next-line import/prefer-default-export
 export async function searchSpotify(token: string, query: string, limit = 20): Promise<SongInfo[]> {
   if (query === '') return [];
 
@@ -49,7 +34,8 @@ export async function searchSpotify(token: string, query: string, limit = 20): P
 }
 
 export async function trendingSpotify(token: string, playlistId?: string): Promise<SongInfo[]> {
-  const idForUrl = playlistId || '37i9dQZEVXbIPWwFssbupI';
+  const idTop50France = '37i9dQZEVXbIPWwFssbupI';
+  const idForUrl = playlistId ?? idTop50France;
   const url = `https://api.spotify.com/v1/playlists/${idForUrl}`;
   const config = {
     params: {
@@ -60,5 +46,6 @@ export async function trendingSpotify(token: string, playlistId?: string): Promi
     },
   };
   const { data } = await axios.get(url, config);
-  return makeObjectOfDataTrendRequest(data);
+  data.tracks.items = data.tracks.items.map((item) => item.track);
+  return makeObjectOfDataRequest(data);
 }
