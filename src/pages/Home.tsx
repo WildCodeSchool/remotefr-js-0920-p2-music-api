@@ -1,17 +1,16 @@
 import React, { useContext, useMemo } from 'react';
-import { Jumbotron } from 'reactstrap';
 import { Switch, Route, NavLink } from 'react-router-dom';
 import { TokenContext } from '../TokenContext';
 import AuthBar from '../components/AuthBar';
 import AuthButtons from '../components/AuthButtons';
-import Search from './Search';
+import SearchAndTrending from './SearchAndTrending';
 
 const UnauthenticatedHome = (): JSX.Element => (
   <main className="container d-flex justify-content-center align-items-center vw-100 vh-100">
-    <Jumbotron className="m-2 shadow d-flex flex-column align-items-center">
+    <div className="jumbotron m-2 shadow d-flex flex-column align-items-center">
       <h1 className="title-md-small text-center">Connectez-vous pour accéder à votre musique</h1>
       <AuthButtons />
-    </Jumbotron>
+    </div>
   </main>
 );
 
@@ -32,7 +31,7 @@ const AuthenticatedHome = (): JSX.Element => (
       <main>
         <Switch>
           <Route exact path="/">
-            <Search />
+            <SearchAndTrending />
           </Route>
         </Switch>
       </main>

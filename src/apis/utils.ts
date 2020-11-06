@@ -17,11 +17,13 @@ export function debounce<F extends (...args: never[]) => void>(fn: F, wait = 1):
 export function interleave<T>(arrays: T[][]): T[] {
   if (arrays.length === 0) return [];
 
+  const maxLength = arrays.reduce((max, arr) => Math.max(max, arr.length), 0);
   const flattenArray: T[] = [];
 
-  for (let i = 0; i < arrays[0].length; i += 1) {
+  for (let i = 0; i < maxLength; i += 1) {
     for (let j = 0; j < arrays.length; j += 1) {
-      flattenArray.push(arrays[j][i]);
+      const val = arrays[j][i];
+      if (val !== undefined) flattenArray.push(val);
     }
   }
 

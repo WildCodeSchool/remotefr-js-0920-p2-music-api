@@ -13,7 +13,6 @@ function makeObjectOfDataRequest(data): SongInfo[] {
   }));
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export async function searchSpotify(token: string, query: string, limit = 20): Promise<SongInfo[]> {
   if (query === '') return [];
 
@@ -32,4 +31,21 @@ export async function searchSpotify(token: string, query: string, limit = 20): P
 
   const response = await axios.get(url, config);
   return makeObjectOfDataRequest(response.data);
+}
+
+export async function trendingSpotify(token: string, limit = 20, playlistId?: string): Promise<SongInfo[]> {
+  const idTop50France = '37i9dQZEVXbIPWwFssbupI';
+  const idForUrl = playlistId ?? idTop50France;
+  const url = `https://api.spotify.com/v1/playlists/${idForUrl}`;
+  const config = {
+    params: {
+      fields: 'tracks.items.track',
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const { data } = await axios.get(url, config);
+  data.tracks.items = data.tracks.items.map((item) => item.track);
+  return makeObjectOfDataRequest(data).slice(0, limit);
 }
